@@ -43,7 +43,7 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
         {
             string subsText = _fileSystem.File.ReadAllText(path, Encoding.GetEncoding(1252));
             string replaced = _translateCharactersService.Translate(subsText);
-            File.WriteAllText(path, replaced, Encoding.UTF8);
+            _fileSystem.File.WriteAllText(path, replaced, Encoding.UTF8);
         }
     }
 }
