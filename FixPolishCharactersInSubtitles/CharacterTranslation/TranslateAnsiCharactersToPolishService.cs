@@ -6,6 +6,9 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
     {
         public string Translate(string text)
         {
+            if (text == null)
+                throw new ArgumentNullException("Provided text is null");
+
             foreach (var character in _characters)
             {
                 text = text.Replace(character.Key, character.Value);
