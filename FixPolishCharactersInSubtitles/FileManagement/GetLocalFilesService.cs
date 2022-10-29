@@ -15,13 +15,12 @@ namespace FixPolishCharactersInSubtitles.FileManagement
         public List<string> GetLocalFiles()
         {
             string strExeFilePath = Assembly.GetExecutingAssembly().Location;
-            if (strExeFilePath == null)
-                throw new NullReferenceException("Path to executable directory is null");
-
-            string? strWorkPath = _fileSystem.Path.GetDirectoryName(strExeFilePath);
 
             if (strExeFilePath == null)
                 throw new NullReferenceException($"Path to executable directory is null. Executable path: {strExeFilePath}");
+
+            string? strWorkPath = _fileSystem.Path.GetDirectoryName(strExeFilePath);
+
             if (!_fileSystem.Directory.Exists(strWorkPath))
                 throw new DirectoryNotFoundException();
 
