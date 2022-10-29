@@ -7,7 +7,7 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
         public string Translate(string text)
         {
             if (text == null)
-                throw new ArgumentNullException("Provided text is null");
+                throw new ArgumentNullException(nameof(text));
 
             foreach (var character in _characters)
             {
@@ -33,6 +33,7 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
             { 'Ñ', 'Ń' },
             { 'Œ', 'Ś' },
             { '¯', 'Ż' },
+            { '\u008F', 'Ź' } // Single Shift Three character - written with unicode since it's impossible to insert that character to VS
         };
     }
 }

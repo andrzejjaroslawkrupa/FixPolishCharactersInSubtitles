@@ -38,8 +38,8 @@ namespace FixPolishCharactersInSubtitlesTests
         [Fact]
         public void Translate_TextWithAllSpecialCharacters_OutputTextTranslatedCorectly()
         {
-            var input = "¹æê³ñœ¿Ÿ¥ÆÊ£ÑŒ¯";
-            var output = "ąćęłńśżźĄĆĘŁŃŚŻ";
+            var input = "¹æê³ñœ¿Ÿ¥ÆÊ£ÑŒ¯\u008f";
+            var output = "ąćęłńśżźĄĆĘŁŃŚŻŹ";
             var result = _translateAnsiCharactersToPolishService.Translate(input);
 
             Assert.Equal(output, result);
@@ -61,6 +61,7 @@ namespace FixPolishCharactersInSubtitlesTests
         [InlineData("Ñ", "Ń")]
         [InlineData("Œ", "Ś")]
         [InlineData("¯", "Ż")]
+        [InlineData("\u008F", "Ź")]
         public void Translate_SingleSpecialCharacter_OutputCharacterTranslatedCorectly(string input, string output)
         {
             var result = _translateAnsiCharactersToPolishService.Translate(input);
