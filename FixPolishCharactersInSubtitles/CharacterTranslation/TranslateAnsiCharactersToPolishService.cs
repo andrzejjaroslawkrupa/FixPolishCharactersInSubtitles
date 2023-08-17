@@ -16,7 +16,7 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
             return text;
         }
 
-        private readonly Dictionary<char, char> _characters = new Dictionary<char, char>()
+        private readonly Dictionary<char, char> _characters = new()
         {
             { '¹', 'ą' },
             { 'æ', 'ć' },

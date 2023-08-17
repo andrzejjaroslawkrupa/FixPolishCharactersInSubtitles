@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace FixPolishCharactersInSubtitles.Abstractions
+﻿namespace FixPolishCharactersInSubtitles.Abstractions
 {
     public interface ITranslateCharactersService
     {

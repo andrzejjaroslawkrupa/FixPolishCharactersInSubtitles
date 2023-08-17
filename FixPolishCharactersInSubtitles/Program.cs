@@ -7,6 +7,7 @@ using System.IO.Abstractions;
 var serviceProvider = new ServiceCollection()
     .AddSingleton<ITranslateCharactersService, TranslateAnsiCharactersToPolishService>()
     .AddSingleton<IConvertCharactersInAllFiles, FixPolishCharactersInAllFilesInCurrentDirectory>()
+    .AddSingleton<IConvertToSubRipService, ConvertToSubRipService>()
     .AddSingleton<IGetLocalFiles, GetLocalFilesService>()
     .AddSingleton<IFileSystem, FileSystem>()
     .BuildServiceProvider();

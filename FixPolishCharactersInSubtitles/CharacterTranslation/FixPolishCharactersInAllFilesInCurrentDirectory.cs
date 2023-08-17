@@ -9,15 +9,18 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
     {
         private readonly IGetLocalFiles _localFilesManager;
         private readonly ITranslateCharactersService _translateCharactersService;
+        private readonly IConvertToSubRipService _convertToSrtService;
         private readonly IFileSystem _fileSystem;
 
         public FixPolishCharactersInAllFilesInCurrentDirectory(
             IGetLocalFiles localFilesManager,
             ITranslateCharactersService translateCharactersService,
+            IConvertToSubRipService convertToSrtService,
             IFileSystem fileSystem)
         {
             _localFilesManager = localFilesManager;
             _translateCharactersService = translateCharactersService;
+            _convertToSrtService = convertToSrtService;
             _fileSystem = fileSystem;
 
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -36,6 +39,7 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
         private readonly List<string> _supportedFileExtensions = new()
         {
             ".srt",
+            ".sub",
             ".txt"
         };
 
@@ -43,6 +47,11 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
         {
             string subsText = _fileSystem.File.ReadAllText(path, Encoding.GetEncoding(1252));
             string replaced = _translateCharactersService.Translate(subsText);
+            if (Path.GetExtension(path) != ".srt")
+            {
+                replaced = _convertToSrtService.ConvertContentToSubRip(replaced);
+                path = _convertToSrtService.ConvertPathToSrt(path);
+            }
             _fileSystem.File.WriteAllText(path, replaced, Encoding.UTF8);
         }
     }
