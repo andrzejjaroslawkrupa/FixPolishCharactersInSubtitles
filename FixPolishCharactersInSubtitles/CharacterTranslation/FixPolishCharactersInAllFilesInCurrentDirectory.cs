@@ -49,8 +49,15 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
             string replaced = _translateCharactersService.Translate(subsText);
             if (Path.GetExtension(path) != ".srt")
             {
-                replaced = _convertToSrtService.ConvertContentToSubRip(replaced);
-                path = _convertToSrtService.ConvertPathToSrt(path);
+                try
+                {
+                    replaced = _convertToSrtService.ConvertContentToSubRip(replaced);
+                    path = _convertToSrtService.ConvertPathToSrt(path);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Convertion to SubRip has failed: {e}");
+                }
             }
             _fileSystem.File.WriteAllText(path, replaced, Encoding.UTF8);
         }
