@@ -29,6 +29,7 @@ namespace FixPolishCharactersInSubtitlesTests
         public void ConvertContentToSrt_MicroDVDContent_MicroDvdConverterUsed(string input, string output)
         {
             input = input.Replace("\r\n", Environment.NewLine);
+            output = output.Replace("\r\n", Environment.NewLine);
             var result = _convertToSrtService.ConvertContentToSubRip(input);
 
             Assert.Equal(output, result);
