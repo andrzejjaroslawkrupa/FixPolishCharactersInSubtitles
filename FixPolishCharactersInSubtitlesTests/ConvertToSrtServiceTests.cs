@@ -28,6 +28,7 @@ namespace FixPolishCharactersInSubtitlesTests
         [InlineData("{5055}{5066}line1\r\n{5515}", "1\r\n00:03:30,625 --> 00:03:31,083\r\nline1\r\n\r\n")]
         public void ConvertContentToSrt_MicroDVDContent_MicroDvdConverterUsed(string input, string output)
         {
+            input = input.Replace("\r\n", Environment.NewLine);
             var result = _convertToSrtService.ConvertContentToSubRip(input);
 
             Assert.Equal(output, result);
