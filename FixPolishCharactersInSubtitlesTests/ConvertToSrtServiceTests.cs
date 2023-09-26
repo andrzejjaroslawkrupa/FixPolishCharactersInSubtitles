@@ -1,4 +1,5 @@
-﻿using FixPolishCharactersInSubtitles.CharacterTranslation;
+﻿using FixPolishCharactersInSubtitles.Abstractions;
+using FixPolishCharactersInSubtitles.CharacterTranslation;
 using Moq;
 using System;
 using System.IO;
@@ -10,41 +11,51 @@ namespace FixPolishCharactersInSubtitlesTests
     public class ConvertToSrtServiceTests
     {
         private readonly Mock<IFileSystem> _fileSystem;
+        private readonly Mock<IConverterFactory> _converterFactory;
         private readonly ConvertToSubRipService _convertToSrtService;
 
         public ConvertToSrtServiceTests()
         {
             _fileSystem = new Mock<IFileSystem>();
-            _convertToSrtService = new ConvertToSubRipService(_fileSystem.Object);
-        }
-
-        [Theory]
-        [InlineData("{1}{1}23.976", "1\r\n00:00:00,041 --> 00:00:00,041\r\n23.976\r\n\r\n")]
-        [InlineData("{1}{1}line1", "1\r\n00:00:00,041 --> 00:00:00,041\r\nline1\r\n\r\n")]
-        [InlineData("{1}{1}5", "1\r\n00:00:00,041 --> 00:00:00,041\r\n5\r\n\r\n")]
-        [InlineData("{1}{1}300", "1\r\n00:00:00,041 --> 00:00:00,041\r\n300\r\n\r\n")]
-        [InlineData("{1}{1}23.976\r\n{5055}{5066}line2\r\n{5515}{5583}ąćęłńśżźĄĆĘŁŃŚŻŹ",
-            "1\r\n00:00:00,041 --> 00:00:00,041\r\n23.976\r\n\r\n2\r\n00:03:30,835 --> 00:03:31,294\r\nline2\r\n\r\n3\r\n00:03:50,021 --> 00:03:52,857\r\nąćęłńśżźĄĆĘŁŃŚŻŹ\r\n\r\n")]
-        [InlineData("{5055}{5066}line1\r\n{5515}", "1\r\n00:03:30,625 --> 00:03:31,083\r\nline1\r\n\r\n")]
-        public void ConvertContentToSrt_MicroDVDContent_MicroDvdConverterUsed(string input, string output)
-        {
-            input = input.Replace("\r\n", Environment.NewLine);
-            output = output.Replace("\r\n", Environment.NewLine);
-            var result = _convertToSrtService.ConvertContentToSubRip(input);
-
-            Assert.Equal(output, result);
+            _converterFactory = new Mock<IConverterFactory>();
+            _convertToSrtService = new ConvertToSubRipService(_fileSystem.Object, _converterFactory.Object);
         }
 
         [Fact]
-        public void ConvertContentToSrt_RandomText_FormatExceptionThrown()
+        public void ConvertContentToSubRip_Null_ArgumentNullExceptionIsThrown()
         {
-            Assert.Throws<FormatException>(() => _convertToSrtService.ConvertContentToSubRip("random text"));
+            Assert.Throws<ArgumentNullException>(() => _convertToSrtService.ConvertContentToSubRip(null));
         }
 
         [Fact]
-        public void ConvertContentToSrt_EmptyInput_FormatExceptionThrown()
+        public void ConvertContentToSubRip_EmptyString_ArgumentNullExceptionIsThrown()
         {
-            Assert.Throws<FormatException>(() => _convertToSrtService.ConvertContentToSubRip(string.Empty));
+            Assert.Throws<ArgumentNullException>(() => _convertToSrtService.ConvertContentToSubRip(string.Empty));
+        }
+
+        [Fact]
+        public void ConvertContentToSubRip_ValidInput_ConverterCreatedAndUsed()
+        {
+            var input = "test";
+            var converter = new Mock<IConverter>();
+            _converterFactory.Setup(c => c.CreateConverter(input)).Returns(converter.Object);
+
+            _convertToSrtService.ConvertContentToSubRip(input);
+
+            _converterFactory.Verify(c => c.CreateConverter(input), Times.Once);
+            converter.Verify(c => c.ConvertToSubRip(input), Times.Once);
+        }
+
+        [Fact]
+        public void ConvertPathToSrt_NullPath_ArgumentNullExceptionIsThrown()
+        {
+            Assert.Throws<ArgumentNullException>(() => _convertToSrtService.ConvertPathToSrt(null));
+        }
+
+        [Fact]
+        public void ConvertPathToSrt_EmptyPath_ArgumentNullExceptionIsThrown()
+        {
+            Assert.Throws<ArgumentNullException>(() => _convertToSrtService.ConvertPathToSrt(string.Empty));
         }
 
         [Fact]

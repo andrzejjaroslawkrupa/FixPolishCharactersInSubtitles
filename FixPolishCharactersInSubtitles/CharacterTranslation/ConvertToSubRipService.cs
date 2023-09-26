@@ -1,61 +1,45 @@
 ﻿using FixPolishCharactersInSubtitles.Abstractions;
-using FixPolishCharactersInSubtitles.CharacterTranslation.Converters;
-using FixPolishCharactersInSubtitles.CharacterTranslation.Enums;
 using System.IO.Abstractions;
-using System.Text.RegularExpressions;
 
 namespace FixPolishCharactersInSubtitles.CharacterTranslation
 {
     public class ConvertToSubRipService : IConvertToSubRipService
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IConverterFactory _converterFactory;
 
-        public ConvertToSubRipService(IFileSystem fileSystem)
+        public ConvertToSubRipService(IFileSystem fileSystem, IConverterFactory converterFactory)
         {
             _fileSystem = fileSystem;
+            _converterFactory = converterFactory;
         }
-
-        private const string MicroDVDFileFormatRegex = @"^\{\d+\}\{\d+\}.+";
 
         public string ConvertContentToSubRip(string content)
         {
-            SubtitleFormat inputFormat = DetermineSubtitleFormat(content);
+            if (string.IsNullOrWhiteSpace(content))
+                throw new ArgumentNullException(nameof(content));
 
-            switch (inputFormat)
-            {
-                case SubtitleFormat.MicroDVD:
-                    return MicroDVDConverter.ConvertFromMicroDVD(content);
-                default:
-                    throw new FormatException("Unknown subtitle format");
-            }
-        }
-
-        private static SubtitleFormat DetermineSubtitleFormat(string inputContent)
-        {
-            if (Regex.IsMatch(inputContent, MicroDVDFileFormatRegex))
-            {
-                return SubtitleFormat.MicroDVD;
-            }
-            else
-            {
-                return SubtitleFormat.Unknown;
-            }
+            var converter = _converterFactory.CreateConverter(content);
+            return converter.ConvertToSubRip(content);
         }
 
         public string ConvertPathToSrt(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+
             string? directory = _fileSystem.Path.GetDirectoryName(path);
 
             if (directory == null)
-                throw new NullReferenceException(directory);
+                throw new NullReferenceException(nameof(directory));
 
             if (!_fileSystem.Directory.Exists(directory))
-                throw new DirectoryNotFoundException(path);
+                throw new DirectoryNotFoundException(directory);
 
             string? fileNameWithoutExtension = _fileSystem.Path.GetFileNameWithoutExtension(path);
 
             if (fileNameWithoutExtension == null)
-                throw new NullReferenceException(fileNameWithoutExtension);
+                throw new NullReferenceException(nameof(fileNameWithoutExtension));
 
             return _fileSystem.Path.Combine(directory, $"{fileNameWithoutExtension}.srt");
         }

@@ -1,15 +1,16 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
+using FixPolishCharactersInSubtitles.Abstractions;
 
 namespace FixPolishCharactersInSubtitles.CharacterTranslation.Converters
 {
-    internal static class MicroDVDConverter
+    internal class MicroDVDConverter : IConverter
     {
         private const string MicroDVDFormatRegex = @"\{(\d+)\}\{(\d+)\}(.+)";
         private const int DefaultFPSValue = 24;
 
-        internal static string ConvertFromMicroDVD(string content)
+        public string ConvertToSubRip(string content)
         {
             if (string.IsNullOrEmpty(content))
                 throw new ArgumentNullException(nameof(content));
