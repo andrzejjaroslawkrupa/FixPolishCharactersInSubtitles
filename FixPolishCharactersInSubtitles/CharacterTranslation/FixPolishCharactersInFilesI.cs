@@ -93,7 +93,18 @@ namespace FixPolishCharactersInSubtitles.CharacterTranslation
                     Console.WriteLine($"Convertion to SubRip has failed: {e}");
                 }
             }
+            if (!_fileSystem.Path.GetFileNameWithoutExtension(path).Contains(".Polish"))
+                path = AddPolishSuffixToFilename(path);
             _fileSystem.File.WriteAllText(path, replaced, Encoding.UTF8);
+        }
+
+        private string AddPolishSuffixToFilename(string path)
+        {
+            var filenameWithoutExtension = _fileSystem.Path.GetFileNameWithoutExtension(path);
+            var directory = Path.GetDirectoryName(path);
+            var newFilename = filenameWithoutExtension + ".Polish" + _fileSystem.Path.GetExtension(path);
+            
+            return _fileSystem.Path.Combine(directory, newFilename);
         }
     }
 }

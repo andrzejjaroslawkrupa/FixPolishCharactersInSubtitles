@@ -36,6 +36,7 @@ namespace FixPolishCharactersInSubtitlesTests
         public void Convert_ValidListOfFiles_AllFilesAreConverted(List<string> filesList)
         {
             SetupSut(filesList);
+            _fileSystemMock.Setup(f => f.Path.GetFileNameWithoutExtension(It.IsAny<string>())).Returns("file.Polish");
 
             _fixPolishCharactersInFiles.Convert();
 
@@ -81,6 +82,9 @@ namespace FixPolishCharactersInSubtitlesTests
         {
             var filename = "file.txt";
             SetupSut(new List<string> { filename });
+            _fileSystemMock.Setup(f => f.Path.GetFileNameWithoutExtension(It.IsAny<string>())).Returns("file");
+            _fileSystemMock.Setup(f => f.Path.GetExtension(It.IsAny<string>())).Returns(".txt");
+            _fileSystemMock.Setup(f => f.Path.GetDirectoryName(It.IsAny<string>())).Returns(string.Empty);
 
             _fixPolishCharactersInFiles.Convert();
 
@@ -93,6 +97,9 @@ namespace FixPolishCharactersInSubtitlesTests
         {
             var filename = "file.srt";
             SetupSut(new List<string> { filename });
+            _fileSystemMock.Setup(f => f.Path.GetFileNameWithoutExtension(It.IsAny<string>())).Returns("file");
+            _fileSystemMock.Setup(f => f.Path.GetExtension(It.IsAny<string>())).Returns(".srt");
+            _fileSystemMock.Setup(f => f.Path.GetDirectoryName(It.IsAny<string>())).Returns(string.Empty);
 
             _fixPolishCharactersInFiles.Convert();
 
@@ -106,6 +113,9 @@ namespace FixPolishCharactersInSubtitlesTests
             var file = new List<string> { "file.txt" };
             _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "file.txt" });
             SetupSut(file);
+            _fileSystemMock.Setup(f => f.Path.GetFileNameWithoutExtension(It.IsAny<string>())).Returns("file");
+            _fileSystemMock.Setup(f => f.Path.GetExtension(It.IsAny<string>())).Returns(".txt");
+            _fileSystemMock.Setup(f => f.Path.GetDirectoryName(It.IsAny<string>())).Returns(string.Empty);
 
             _fixPolishCharactersInFiles.Convert();
 
