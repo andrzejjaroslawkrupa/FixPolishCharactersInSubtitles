@@ -1,7 +1,8 @@
 ﻿namespace FixPolishCharactersInSubtitles.FileManagement
 {
-    public interface IGetLocalFiles
+    public interface IGetFiles
     {
         List<string> GetLocalFiles();
+        List<string> GetFilesFromDir(string directory);
     }
 }

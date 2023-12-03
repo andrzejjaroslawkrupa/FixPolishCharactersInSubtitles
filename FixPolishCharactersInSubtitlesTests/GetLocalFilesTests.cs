@@ -11,12 +11,12 @@ namespace FixPolishCharactersInSubtitlesTests
     public class GetLocalFilesTests
     {
         private readonly Mock<IFileSystem> _fileSystemMock;
-        private readonly GetLocalFilesService _getLocalFilesService;
+        private readonly GetFilesService _getLocalFilesService;
 
         public GetLocalFilesTests()
         {
             _fileSystemMock = new Mock<IFileSystem>();
-            _getLocalFilesService = new GetLocalFilesService(_fileSystemMock.Object);
+            _getLocalFilesService = new GetFilesService(_fileSystemMock.Object);
         }
 
         [Fact]

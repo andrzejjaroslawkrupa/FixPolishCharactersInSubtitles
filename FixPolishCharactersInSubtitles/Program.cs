@@ -1,4 +1,5 @@
-﻿using FixPolishCharactersInSubtitles.Abstractions;
+﻿using FixPolishCharactersInSubtitles;
+using FixPolishCharactersInSubtitles.Abstractions;
 using FixPolishCharactersInSubtitles.CharacterTranslation;
 using FixPolishCharactersInSubtitles.CharacterTranslation.Converters;
 using FixPolishCharactersInSubtitles.FileManagement;
@@ -7,11 +8,12 @@ using System.IO.Abstractions;
 
 var serviceProvider = new ServiceCollection()
     .AddSingleton<ITranslateCharactersService, TranslateAnsiCharactersToPolishService>()
-    .AddSingleton<IConvertCharactersInAllFiles, FixPolishCharactersInAllFilesInCurrentDirectory>()
+    .AddSingleton<IConvertCharactersInFiles, FixPolishCharactersInFilesI>()
     .AddSingleton<IConvertToSubRipService, ConvertToSubRipService>()
-    .AddSingleton<IGetLocalFiles, GetLocalFilesService>()
+    .AddSingleton<IGetFiles, GetFilesService>()
     .AddSingleton<IFileSystem, FileSystem>()
+    .AddSingleton<ICommandLineInterface, CommandLineInterface>()
     .AddSingleton<IConverterFactory, ConverterFactory>()
     .BuildServiceProvider();
 
-serviceProvider?.GetService<IConvertCharactersInAllFiles>()?.ConvertAllFiles();
+serviceProvider?.GetService<IConvertCharactersInFiles>()?.Convert();

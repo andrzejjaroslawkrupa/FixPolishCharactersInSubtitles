@@ -2,6 +2,7 @@
 using FixPolishCharactersInSubtitles.CharacterTranslation;
 using FixPolishCharactersInSubtitles.FileManagement;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
@@ -10,31 +11,33 @@ using Xunit;
 
 namespace FixPolishCharactersInSubtitlesTests
 {
-    public class FixPolishCharactersInAllFilesInCurrentDirectoryTests
+    public class FixPolishCharactersInFilesTests
     {
-        private readonly Mock<IGetLocalFiles> _getLocalFilesMock;
+        private readonly Mock<IGetFiles> _getFilesMock;
         private readonly Mock<ITranslateCharactersService> _translateCharactersServiceMock;
         private readonly Mock<IConvertToSubRipService> _convertToSrtServiceMock;
         private readonly Mock<IFileSystem> _fileSystemMock;
-        private readonly FixPolishCharactersInAllFilesInCurrentDirectory _fixPolishCharactersInAllFilesInCurrentDirectory;
+        private readonly Mock<ICommandLineInterface> _commandLineInterfaceMock;
+        private readonly FixPolishCharactersInFilesI _fixPolishCharactersInFiles;
 
-        public FixPolishCharactersInAllFilesInCurrentDirectoryTests()
+        public FixPolishCharactersInFilesTests()
         {
-            _getLocalFilesMock = new Mock<IGetLocalFiles>();
+            _getFilesMock = new Mock<IGetFiles>();
             _translateCharactersServiceMock = new Mock<ITranslateCharactersService>();
             _convertToSrtServiceMock = new Mock<IConvertToSubRipService>();
             _fileSystemMock = new Mock<IFileSystem>();
-            _fixPolishCharactersInAllFilesInCurrentDirectory = new FixPolishCharactersInAllFilesInCurrentDirectory(
-                _getLocalFilesMock.Object, _translateCharactersServiceMock.Object, _convertToSrtServiceMock.Object, _fileSystemMock.Object);
+            _commandLineInterfaceMock = new Mock<ICommandLineInterface>();
+            _fixPolishCharactersInFiles = new FixPolishCharactersInFilesI(
+                _getFilesMock.Object, _translateCharactersServiceMock.Object, _convertToSrtServiceMock.Object, _fileSystemMock.Object, _commandLineInterfaceMock.Object);
         }
 
         [Theory]
         [MemberData(nameof(InputFileListTestData))]
-        public void ConvertAllFiles_ValidListOfFiles_AllFilesAreConverted(List<string> filesList)
+        public void Convert_ValidListOfFiles_AllFilesAreConverted(List<string> filesList)
         {
             SetupSut(filesList);
 
-            _fixPolishCharactersInAllFilesInCurrentDirectory.ConvertAllFiles();
+            _fixPolishCharactersInFiles.Convert();
 
             AssertFilesWereConverted(filesList);
         }
@@ -54,52 +57,94 @@ namespace FixPolishCharactersInSubtitlesTests
         }
 
         [Fact]
-        public void ConvertAllFiles_NoFiles_NoConversion()
+        public void Convert_NoFiles_NoConversion()
         {
             SetupSut(new List<string>());
 
-            _fixPolishCharactersInAllFilesInCurrentDirectory.ConvertAllFiles();
+            _fixPolishCharactersInFiles.Convert();
 
             AssertNoFilesConverted();
         }
 
         [Fact]
-        public void ConvertAllFiles_FileWithUnsupportedExtentsion_NoConversion()
+        public void Convert_FileWithUnsupportedExtentsion_NoConversion()
         {
             SetupSut(new List<string> { "file.unsupported" });
 
-            _fixPolishCharactersInAllFilesInCurrentDirectory.ConvertAllFiles();
+            _fixPolishCharactersInFiles.Convert();
 
             AssertNoFilesConverted();
         }
 
         [Fact]
-        public void ConvertAllFiles_TxtFile_FileConvertedToSrt()
+        public void Convert_TxtFile_FileConvertedToSrt()
         {
             var filename = "file.txt";
             SetupSut(new List<string> { filename });
 
-            _fixPolishCharactersInAllFilesInCurrentDirectory.ConvertAllFiles();
+            _fixPolishCharactersInFiles.Convert();
 
             _convertToSrtServiceMock.Verify(m => m.ConvertContentToSubRip(It.IsAny<string>()), Times.Once);
             _convertToSrtServiceMock.Verify(c => c.ConvertPathToSrt(filename), Times.Once);
         }
 
         [Fact]
-        public void ConvertAllFiles_SrtFile_FileNotConvertedToSrt()
+        public void Convert_SrtFile_FileNotConvertedToSrt()
         {
             var filename = "file.srt";
             SetupSut(new List<string> { filename });
 
-            _fixPolishCharactersInAllFilesInCurrentDirectory.ConvertAllFiles();
+            _fixPolishCharactersInFiles.Convert();
 
             _convertToSrtServiceMock.Verify(m => m.ConvertContentToSubRip(It.IsAny<string>()), Times.Never);
             _convertToSrtServiceMock.Verify(c => c.ConvertPathToSrt(filename), Times.Never);
         }
 
+        [Fact]
+        public void Convert_ValidPathArgument_FileConverted()
+        {
+            var file = new List<string> { "file.txt" };
+            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "file.txt" });
+            SetupSut(file);
+
+            _fixPolishCharactersInFiles.Convert();
+
+            AssertFilesWereConverted(file);
+        }
+
+        [Fact]
+        public void Convert_EmptyPathArgument_ExceptionIsThrown()
+        {
+            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "" });
+
+            Assert.Throws<ArgumentNullException>(() => _fixPolishCharactersInFiles.Convert());
+        }
+
+        [Fact]
+        public void Convert_NullPathArgument_ExceptionIsThrown()
+        {
+            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", null });
+
+            Assert.Throws<ArgumentNullException>(() => _fixPolishCharactersInFiles.Convert());
+        }
+
+        [Fact]
+        public void Convert_PathFromArgumentDoesNotExist_ExceptionIsThrown()
+        {
+            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "fake\\path"});
+            _fileSystemMock.Setup(f => f.Directory.Exists(It.IsAny<string>())).Returns(false);
+
+            Assert.Throws<DirectoryNotFoundException>(() => _fixPolishCharactersInFiles.Convert());
+        }
+
         private void SetupSut(List<string> filesList)
         {
-            _getLocalFilesMock.Setup(g => g.GetLocalFiles()).Returns(filesList);
+            foreach (var file in filesList)
+            {
+                _fileSystemMock.Setup(f => f.Directory.Exists(file)).Returns(true);
+            }
+            _getFilesMock.Setup(g => g.GetLocalFiles()).Returns(filesList);
+            _getFilesMock.Setup(g => g.GetFilesFromDir(It.IsAny<string>())).Returns(filesList);
             _fileSystemMock.Setup(f => f.File.ReadAllText(It.IsAny<string>())).Returns(string.Empty);
             _fileSystemMock.Setup(f => f.File.WriteAllText(It.IsAny<string>(), It.IsAny<string>()));
         }
