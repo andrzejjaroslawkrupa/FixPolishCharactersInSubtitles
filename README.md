@@ -25,7 +25,11 @@ $ dotnet build .\FixPolishCharactersInSubtitles.sln
 Or download release version.
 
 ## Using the tool
-Paste subtitle file to a folder where executable "FixPolishCharactersInSubtitles.exe" resides and run that executable.
+Run executable file with --path argument and path to a folder:
+```
+$ .\FixPolishCharactersInSubtitles.exe --path "path to your folder"
+```
+Alternatively you can paste your subtitle file to a folder where executable "FixPolishCharactersInSubtitles.exe" resides and run that executable.
 After that file should be converted.
 
 # FixPolishCharactersInSubtitles
@@ -55,5 +59,9 @@ $ dotnet build .\FixPolishCharactersInSubtitles.sln
 lub pobrać wersję releasową.
 
 ## Korzystanie z narzędzia
-Wklej plik z napisami do folderu, w którym znajduje się wykonywalny plik "FixPolishCharactersInSubtitles.exe" i go uruchom.
+Uruchom plik wykonywalny z argumentem --path i ścieżką do folderu:
+```
+$ .\FixPolishCharactersInSubtitles.exe --path "ścieżka do twojego folderu"
+```
+Alternatywnie wklej plik z napisami do folderu, w którym znajduje się wykonywalny plik "FixPolishCharactersInSubtitles.exe" i go uruchom.
 Po wykonaniu operacji plik powinien zostać skonwertowany.
