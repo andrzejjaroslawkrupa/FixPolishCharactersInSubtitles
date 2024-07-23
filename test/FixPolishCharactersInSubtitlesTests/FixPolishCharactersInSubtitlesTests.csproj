@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FixPolishCharactersInSubtitles\FixPolishCharactersInSubtitles.csproj" />
+    <ProjectReference Include="..\..\src\FixPolishCharactersInSubtitles\FixPolishCharactersInSubtitles.csproj" />
   </ItemGroup>
 
 </Project>
