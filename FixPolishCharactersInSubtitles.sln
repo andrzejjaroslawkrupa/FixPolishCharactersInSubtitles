@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8BFE27D2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPolishCharactersInSubtitles.UnitTests", "test\FixPolishCharactersInSubtitles.UnitTests\FixPolishCharactersInSubtitles.UnitTests.csproj", "{A11A428F-6EE2-482B-A884-A4D018C9462B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FixPolishCharactersInSubtitles.IntegrationTests", "test\FixPolishCharactersInSubtitles.IntegrationTests\FixPolishCharactersInSubtitles.IntegrationTests.csproj", "{8D1F0C35-C002-459A-877A-8FD347F384CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,12 +25,17 @@ Global
 		{A11A428F-6EE2-482B-A884-A4D018C9462B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A11A428F-6EE2-482B-A884-A4D018C9462B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A11A428F-6EE2-482B-A884-A4D018C9462B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D1F0C35-C002-459A-877A-8FD347F384CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1F0C35-C002-459A-877A-8FD347F384CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1F0C35-C002-459A-877A-8FD347F384CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1F0C35-C002-459A-877A-8FD347F384CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A11A428F-6EE2-482B-A884-A4D018C9462B} = {8BFE27D2-FAF0-4E33-9B26-AB20105DA172}
+		{8D1F0C35-C002-459A-877A-8FD347F384CA} = {8BFE27D2-FAF0-4E33-9B26-AB20105DA172}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {577215AC-F996-4F49-8CBD-09A0E728CA9D}
