@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace FixPolishCharactersInSubtitlesTests.ConvertersTests
+namespace FixPolishCharactersInSubtitles.UnitTests.ConvertersTests
 {
     public class MicroDVDConverterTests
     {

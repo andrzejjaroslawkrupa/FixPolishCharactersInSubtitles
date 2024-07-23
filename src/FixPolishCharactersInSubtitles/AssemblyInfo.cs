@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM.
 
 [assembly: Guid("482822e3-ad3f-4270-bb67-33d7d051adf7")]
-[assembly: InternalsVisibleTo("FixPolishCharactersInSubtitlesTests")]
+[assembly: InternalsVisibleTo("FixPolishCharactersInSubtitles.UnitTests")]

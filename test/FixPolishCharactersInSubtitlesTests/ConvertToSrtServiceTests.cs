@@ -6,7 +6,7 @@ using System.IO;
 using System.IO.Abstractions;
 using Xunit;
 
-namespace FixPolishCharactersInSubtitlesTests
+namespace FixPolishCharactersInSubtitles.UnitTests
 {
     public class ConvertToSrtServiceTests
     {

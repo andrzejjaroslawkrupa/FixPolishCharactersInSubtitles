@@ -2,7 +2,7 @@
 using System;
 using Xunit;
 
-namespace FixPolishCharactersInSubtitlesTests
+namespace FixPolishCharactersInSubtitles.UnitTests
 {
     public class TranslateAnsiCharactersToPolishServiceTests
     {

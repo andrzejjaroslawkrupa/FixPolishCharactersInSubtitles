@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPolishCharactersInSubtit
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8BFE27D2-FAF0-4E33-9B26-AB20105DA172}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPolishCharactersInSubtitlesTests", "test\FixPolishCharactersInSubtitlesTests\FixPolishCharactersInSubtitlesTests.csproj", "{5D71DA63-F6E4-4E1B-8987-A618A56FA22F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FixPolishCharactersInSubtitles.UnitTests", "test\FixPolishCharactersInSubtitlesTests\FixPolishCharactersInSubtitles.UnitTests.csproj", "{5D71DA63-F6E4-4E1B-8987-A618A56FA22F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

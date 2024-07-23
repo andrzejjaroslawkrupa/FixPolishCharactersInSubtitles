@@ -9,7 +9,7 @@ using System.IO.Abstractions;
 using System.Text;
 using Xunit;
 
-namespace FixPolishCharactersInSubtitlesTests
+namespace FixPolishCharactersInSubtitles.UnitTests
 {
     public class FixPolishCharactersInFilesTests
     {
@@ -141,7 +141,7 @@ namespace FixPolishCharactersInSubtitlesTests
         [Fact]
         public void Convert_PathFromArgumentDoesNotExist_ExceptionIsThrown()
         {
-            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "fake\\path"});
+            _commandLineInterfaceMock.Setup(c => c.GetCommandLineArgs()).Returns(new string[] { "--path", "fake\\path" });
             _fileSystemMock.Setup(f => f.Directory.Exists(It.IsAny<string>())).Returns(false);
 
             Assert.Throws<DirectoryNotFoundException>(() => _fixPolishCharactersInFiles.Convert());
